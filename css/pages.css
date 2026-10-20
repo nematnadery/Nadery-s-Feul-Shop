@@ -1,0 +1,336 @@
+/* ============================================================
+   pages.css — استایل صفحه‌های بعدی: ورود، مشتریان، برادرها، پول،
+   مصارف، گزارش، تقویم و چاپ. بعد از style.css بارگذاری می‌شود.
+   ============================================================ */
+
+:root {
+  --slate: #355c9a;
+  --slate-soft: #e3ecfa;
+  --ok-soft: #e5f4ea;
+  --danger-soft: #fde8e6;
+}
+
+
+
+/* ---------- قفل بودن برنامه تا ورود ---------- */
+body.locked .app { display: none; }
+body:not(.locked) .login { display: none; }
+
+/* ---------- صفحه ورود ---------- */
+.login {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 2px, transparent 2px 16px),
+    radial-gradient(1200px 600px at 80% 0%, #2c3648 0%, transparent 60%),
+    linear-gradient(180deg, var(--ink-2), var(--ink));
+}
+.login-card {
+  width: min(400px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 32px 30px 28px;
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, .7);
+  text-align: center;
+}
+.login-card .brand-mark { width: 58px; height: 58px; margin: 0 auto; color: var(--amber); background: var(--ink); border-radius: 16px; padding: 9px; }
+.login-card h2 { margin: 4px 0 0; font-size: 1.35rem; font-weight: 800; }
+.login-card p { margin: -6px 0 4px; color: var(--muted); font-size: .9rem; }
+.login-card .field { text-align: right; }
+
+.form-error {
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: .88rem;
+  font-weight: 600;
+  text-align: right;
+}
+.form-error[hidden] { display: none; }
+
+input[type="password"],
+input[type="date"],
+input[type="tel"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+input[type="password"]:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 4px rgba(240, 147, 15, .16);
+}
+
+/* ---------- اعلان بالای داشبورد ---------- */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--amber-soft);
+  border: 1px solid #f0c777;
+  color: #5b3d00;
+  font-weight: 600;
+}
+.banner[hidden] { display: none; }
+
+/* ---------- کارت‌های آمار: گونه‌ها ---------- */
+.stat-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.stat-grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.stat-cash::before { background: var(--slate); }
+.stat-debt::before { background: var(--amber-d); }
+.stat-profit::before, .stat-ok::before { background: var(--ok); }
+.stat-sub { margin-top: 4px; font-size: .78rem; color: var(--muted); }
+.stat-grid-5 .stat-value { font-size: 1.5rem; }
+
+@media (max-width: 1250px) {
+  .stat-grid-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1100px) {
+  .stat-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .stat-grid-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- چیدمان‌ها ---------- */
+.two-col-wide-left { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+@media (max-width: 1100px) {
+  .two-col-wide-left { grid-template-columns: 1fr; }
+}
+.form-grid.one-col { grid-template-columns: 1fr; }
+
+.page > .two-col + .two-col,
+.page > .stat-grid + .two-col,
+.page > .stat-grid + .panel,
+.page > .two-col + .panel,
+.page > .panel + .two-col,
+.page > .banner + .stat-grid { margin-top: 20px; }
+.page > .banner + .stat-grid { margin-top: 0; }
+#people-list-view > .panel + .two-col,
+#customers-detail-view > .panel + .two-col,
+#people-detail-view > .panel + .stat-grid,
+#people-detail-view > .stat-grid + .panel,
+#customers-detail-view > .back-btn + .panel { margin-top: 20px; }
+.back-btn { margin-bottom: 14px; }
+
+.panel-note { margin: -6px 0 14px; color: var(--muted); font-size: .88rem; }
+
+/* ---------- فیلتر تاریخ ---------- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.field.inline { flex-direction: row; align-items: center; gap: 8px; }
+.field.inline > span { white-space: nowrap; }
+.field.inline input { width: 150px; }
+
+/* ---------- جمع پایین جدول ---------- */
+.total-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .9rem;
+}
+.total-line b { font-size: 1.25rem; color: var(--text); font-weight: 800; }
+.total-line small { color: var(--muted); font-weight: 500; }
+
+/* ---------- جدول‌های قابل‌کلیک و ردیف‌ها ---------- */
+.table-click tbody tr { cursor: pointer; }
+.row-actions { display: flex; gap: 8px; align-items: center; }
+.amt-in { color: var(--ok); font-weight: 700; }
+.amt-out { color: var(--danger); font-weight: 700; }
+.pos { color: var(--ok); font-weight: 700; }
+.neg { color: var(--danger); font-weight: 700; }
+.muted { color: var(--muted); }
+.table td.num-cell { direction: ltr; text-align: right; }
+.table tr.is-void .tag { opacity: .6; }
+
+/* ---------- سربرگ حساب یک نفر ---------- */
+.detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 2px, transparent 2px 14px),
+    linear-gradient(135deg, var(--ink-2), var(--ink));
+  color: #f1eee7;
+  border: 0;
+}
+.detail-name { font-size: 1.4rem; font-weight: 800; }
+.detail-sub { color: #9aa3b2; font-size: .88rem; }
+.detail-balance { text-align: left; }
+.detail-balance-k { display: block; font-size: .8rem; color: #9aa3b2; }
+.detail-balance b { font-size: 1.9rem; font-weight: 800; color: var(--amber); letter-spacing: -.5px; }
+.detail-balance small { color: #9aa3b2; font-weight: 500; font-size: .85rem; }
+
+/* ---------- پول: تفکیک ورودی و خروجی ---------- */
+.breakdown { margin: 0; display: grid; gap: 2px; }
+.breakdown > div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 4px; border-bottom: 1px solid var(--line-2); }
+.breakdown dt { color: var(--text); }
+.breakdown dd { margin: 0; font-weight: 800; }
+.breakdown-group {
+  margin-top: 8px;
+  padding: 4px 10px !important;
+  border: 0 !important;
+  border-radius: 6px;
+  background: var(--paper);
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.breakdown-group:first-child { margin-top: 0; }
+
+/* ---------- پیش‌نمایش با تفاوت مثبت و منفی ---------- */
+.preview b.pos { color: var(--ok); }
+.preview b.neg { color: var(--danger); }
+
+/* ============================================================
+   گزارش هفته‌وار (برگه A4)
+   ============================================================ */
+.sheet {
+  width: min(210mm, 100%);
+  margin: 20px auto 0;
+  padding: 14mm 14mm 12mm;
+  background: #fff;
+  color: #111;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+}
+.sheet-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 3px solid var(--amber);
+}
+.sheet-brand { display: flex; align-items: center; gap: 12px; }
+.sheet-brand .brand-mark { width: 46px; height: 46px; padding: 7px; border-radius: 12px; background: var(--ink); color: var(--amber); }
+.sheet-brand h2 { margin: 0; font-size: 1.3rem; font-weight: 800; }
+.sheet-period { color: #555; font-size: .92rem; }
+.sheet-meta { font-size: .82rem; color: #555; text-align: left; line-height: 1.9; }
+
+.sheet-sec { margin-top: 14px; break-inside: avoid; }
+.sheet-sec h3 {
+  margin: 0 0 6px;
+  padding: 4px 10px;
+  font-size: .95rem;
+  font-weight: 800;
+  background: #f6f1e6;
+  border-right: 4px solid var(--amber);
+}
+.sheet-table { font-size: .84rem; }
+.sheet-table th { position: static; background: #fafafa; }
+.sheet-table th, .sheet-table td { padding: 6px 10px; }
+.sheet-table tbody tr:nth-child(even) { background: #fcfaf5; }
+.sheet-table tbody tr:hover { background: inherit; }
+.sheet-table td:not(:first-child), .sheet-table th:not(:first-child) { text-align: left; direction: ltr; }
+.sheet-table.text-last td:last-child { text-align: right; direction: rtl; }
+.sheet-table tr.row-total td { font-weight: 800; background: #f6f1e6; }
+.sheet-note { margin: 6px 0 0; font-size: .76rem; color: #666; }
+.sheet-note[hidden] { display: none; }
+
+.sheet-foot { display: flex; justify-content: space-around; gap: 24px; margin-top: 36px; }
+.sign { flex: 1; max-width: 240px; padding-top: 6px; border-top: 1.5px solid #333; text-align: center; font-size: .82rem; color: #444; }
+
+/* ============================================================
+   تقویم انتخاب تاریخ
+   ============================================================ */
+.datepicker {
+  position: absolute;
+  z-index: 60;
+  width: 288px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 60px -18px rgba(20, 24, 31, .45);
+}
+.datepicker[hidden] { display: none; }
+.dp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.dp-title { font-weight: 800; }
+.dp-nav {
+  width: 32px; height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.dp-nav:hover { background: var(--amber-soft); }
+.dp-weekdays, .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
+.dp-weekdays span { font-size: .75rem; font-weight: 700; color: var(--muted); padding: 4px 0; }
+.dp-day {
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: .88rem;
+}
+.dp-day:hover { background: var(--amber-soft); }
+.dp-day.is-other { color: #b5b9c1; }
+.dp-day.is-today { box-shadow: inset 0 0 0 1.5px var(--amber); }
+.dp-day.is-selected { background: var(--ink); color: #fff; }
+.dp-day.is-friday { color: var(--petrol); }
+.dp-foot { display: flex; justify-content: space-between; margin-top: 10px; }
+
+/* ============================================================
+   چاپ: فقط برگه گزارش
+   ============================================================ */
+@page { size: A4; margin: 12mm; }
+
+@media print {
+  body, body.locked { background: #fff !important; }
+  .no-print,
+  .sidebar,
+  .topbar,
+  .toast,
+  .login,
+  .datepicker,
+  dialog { display: none !important; }
+
+  .app { display: block !important; }
+  .main { padding: 0 !important; }
+  .page { display: none !important; }
+  #page-reports { display: block !important; animation: none; }
+
+  .sheet {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .sheet-sec h3, .sheet-table tr.row-total td, .sheet-head { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

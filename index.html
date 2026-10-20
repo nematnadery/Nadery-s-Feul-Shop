@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>دوکان تیل</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+  >
+</head>
+<body class="locked">
+
+<!-- ============================================================
+     صفحه ورود (با رمز عبور)
+     body کلاس locked دارد؛ بعد از ورود موفق، جی‌اس آن را برمی‌دارد.
+     بار اول (رمزی ثبت نشده): login-password2-wrap را نشان بدهید.
+     ============================================================ -->
+<div class="login" id="login-screen" >
+  <form class="login-card" id="login-form" autocomplete="off">
+    <img src="pic/logo.png" alt="logo"  class="brand-mark">
+    <h2 id="login-title">تیل فروشی برادران نادری </h2>
+    <p id="login-hint">رمز عبور را وارد کنید.</p>
+    <label class="field">
+      <span>رمز عبور</span>
+      <input type="password" id="login-password" class="num" required>
+    </label>
+    <label class="field" id="login-password2-wrap" hidden>
+      <span>تکرار رمز عبور</span>
+      <input type="password" id="login-password2" class="num">
+    </label>
+    <div class="form-error" id="login-error" hidden></div>
+    <button type="submit" class="btn btn-primary btn-block" id="login-submit">ورود</button>
+  </form>
+</div>
+
+<div class="app">
+
+  <!-- ===== نوار کناری ===== -->
+  <aside class="sidebar no-print">
+    <div class="brand">
+          <img src="pic/logo.png" alt="logo"  class="brand-mark">
+
+      <div>
+        <div class="brand-name">تیل فروشی برادران نادری</div>
+        <div class="brand-sub">حساب و موجودی</div>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-item active" data-page="dashboard"><span class="nav-ico">◧</span>داشبورد</button>
+      <button class="nav-item" data-page="sales"><span class="nav-ico">⬆</span>فروش</button>
+      <button class="nav-item" data-page="purchases"><span class="nav-ico">⬇</span>خرید</button>
+      <button class="nav-item" data-page="stock"><span class="nav-ico">▤</span>موجودی</button>
+
+      <div class="nav-label">حساب‌ها</div>
+      <button class="nav-item" data-page="customers"><span class="nav-ico">☷</span>مشتریان قرضدار</button>
+      <button class="nav-item" data-page="people"><span class="nav-ico">☺</span>برادرها و پدر</button>
+      <button class="nav-item" data-page="cash"><span class="nav-ico">₳</span>پول و تحویل به پدر</button>
+      <button class="nav-item" data-page="expenses"><span class="nav-ico">✎</span>مصارف دوکان</button>
+
+      <div class="nav-label">گزارش و تنظیم</div>
+      <button class="nav-item" data-page="reports"><span class="nav-ico">⎙</span>گزارش هفته‌وار</button>
+      <button class="nav-item" data-page="settings"><span class="nav-ico">⚙</span>تنظیمات</button>
+    </nav>
+
+    <div class="backup">
+      <div class="backup-title">پشتیبان اطلاعات</div>
+      <button class="btn btn-ghost btn-block" id="btn-backup">ذخیره پشتیبان</button>
+      <button class="btn btn-ghost btn-block" id="btn-restore">بازگردانی پشتیبان</button>
+      <input type="file" id="file-restore" accept=".json,application/json" hidden>
+      <div class="backup-status" id="backup-status">هنوز پشتیبان گرفته نشده</div>
+      <button class="btn btn-ghost btn-block btn-logout" id="btn-logout">خروج</button>
+    </div>
+  </aside>
+
+  <!-- ===== بخش اصلی ===== -->
+  <main class="main">
+    <header class="topbar no-print">
+      <h1 id="page-title">داشبورد</h1>
+      <div class="today-chip"><span class="dot"></span><span id="today-label">—</span></div>
+    </header>
+
+    <!-- =====================================================
+         داشبورد
+         ===================================================== -->
+    <section class="page active" id="page-dashboard">
+      <div class="banner" id="backup-banner" hidden>
+        <span id="backup-banner-text">بیش از ۷ روز از آخرین پشتیبان گذشته است.</span>
+        <button class="btn btn-small btn-primary" id="banner-backup">همین حالا پشتیبان بگیرید</button>
+      </div>
+
+      <div class="stat-grid">
+        <article class="stat stat-diesel">
+          <div class="stat-label">موجودی دیزل</div>
+          <div class="stat-value"><span id="stat-diesel">۰</span><small>لیتر</small></div>
+        </article>
+        <article class="stat stat-petrol">
+          <div class="stat-label">موجودی پطرول</div>
+          <div class="stat-value"><span id="stat-petrol">۰</span><small>لیتر</small></div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">فروش امروز</div>
+          <div class="stat-value"><span id="stat-sales-today">۰</span><small>افغانی</small></div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">فروش این هفته</div>
+          <div class="stat-value"><span id="stat-sales-week">۰</span><small>افغانی</small></div>
+        </article>
+        <article class="stat stat-cash">
+          <div class="stat-label">پول نزد شما</div>
+          <div class="stat-value"><span id="stat-cash">۰</span><small>افغانی</small></div>
+        </article>
+        <article class="stat stat-debt">
+          <div class="stat-label">قرض مشتریان</div>
+          <div class="stat-value"><span id="stat-debts">۰</span><small>افغانی</small></div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">مصارف این هفته</div>
+          <div class="stat-value"><span id="stat-expenses-week">۰</span><small>افغانی</small></div>
+        </article>
+        <article class="stat stat-profit">
+          <div class="stat-label">سود تقریبی این هفته</div>
+          <div class="stat-value"><span id="stat-profit-week">۰</span><small>افغانی</small></div>
+        </article>
+      </div>
+
+      <div class="two-col">
+        <section class="panel">
+          <h2 class="panel-title">موجودی هر دسته</h2>
+          <div id="stock-list" class="stock-list"></div>
+          <p class="empty" id="stock-list-empty">هنوز دسته‌ای ثبت نشده. از تنظیمات یک دسته اضافه کنید.</p>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">آخرین حرکت‌ها</h2>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>تاریخ</th><th>حرکت</th><th>دسته</th><th>لیتر</th><th>مبلغ</th></tr></thead>
+              <tbody id="recent-body"></tbody>
+            </table>
+          </div>
+          <p class="empty" id="recent-empty">هنوز حرکتی ثبت نشده.</p>
+        </section>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         خرید
+         ===================================================== -->
+    <section class="page" id="page-purchases">
+      <section class="panel">
+        <h2 class="panel-title">ثبت خرید جدید</h2>
+        <form id="purchase-form" class="form-grid" autocomplete="off">
+          <label class="field">
+            <span>تاریخ</span>
+            <input type="text" id="p-date" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۶" required>
+          </label>
+          <label class="field">
+            <span>دسته</span>
+            <select id="p-category" required></select>
+          </label>
+          <label class="field">
+            <span>واحد خرید</span>
+            <select id="p-unit">
+              <option value="ton">تن</option>
+              <option value="bilar">بیلر</option>
+              <option value="liter">لیتر</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>مقدار</span>
+            <input type="number" id="p-qty" class="num" step="any" min="0" inputmode="decimal" required>
+          </label>
+          <label class="field">
+            <span>مجموع پول پرداخت‌شده (افغانی)</span>
+            <input type="number" id="p-total" class="num" step="any" min="0" inputmode="decimal" required>
+          </label>
+          <label class="field">
+            <span>تأمین‌کننده (اختیاری)</span>
+            <input type="text" id="p-supplier">
+          </label>
+
+          <div class="preview" id="purchase-preview">
+            <div><span class="preview-k">معادل</span><b id="p-prev-liters">—</b><small>لیتر</small></div>
+            <div><span class="preview-k">قیمت خرید هر لیتر</span><b id="p-prev-cost">—</b><small>افغانی</small></div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">ثبت خرید</button>
+            <button type="reset" class="btn btn-ghost">پاک‌کردن فرم</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">فهرست خریدها</h2>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>تاریخ</th><th>دسته</th><th>مقدار</th><th>معادل لیتر</th>
+                <th>مجموع پول</th><th>قیمت هر لیتر</th><th>تأمین‌کننده</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="purchase-body"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="purchase-empty">هنوز خریدی ثبت نشده.</p>
+      </section>
+    </section>
+
+    <!-- =====================================================
+         فروش
+         ===================================================== -->
+    <section class="page" id="page-sales">
+      <section class="panel">
+        <h2 class="panel-title">ثبت فروش جدید</h2>
+        <form id="sale-form" class="form-grid" autocomplete="off">
+          <label class="field">
+            <span>تاریخ</span>
+            <input type="text" id="s-date" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۶" required>
+          </label>
+          <label class="field">
+            <span>دسته</span>
+            <select id="s-category" required></select>
+          </label>
+          <label class="field">
+            <span>مقدار (لیتر)</span>
+            <input type="number" id="s-liters" class="num" step="any" min="0" inputmode="decimal" required>
+          </label>
+
+          <fieldset class="field field-wide segmented" id="s-type">
+            <legend>نوع فروش</legend>
+            <label class="seg"><input type="radio" name="sale-type" value="cash" checked><span>نقد</span></label>
+            <label class="seg"><input type="radio" name="sale-type" value="credit"><span>قرضه</span></label>
+            <label class="seg"><input type="radio" name="sale-type" value="family"><span>مصرف خانوادگی</span></label>
+          </fieldset>
+
+          <label class="field">
+            <span>قیمت فروش هر لیتر (افغانی)</span>
+            <input type="number" id="s-price" class="num" step="any" min="0" inputmode="decimal" required>
+            <small class="hint" id="s-price-hint">قیمت روز این دسته: —</small>
+          </label>
+
+          <!-- فقط برای نوع «قرضه» نشان داده شود -->
+          <label class="field" id="s-customer-wrap" hidden>
+            <span>مشتری</span>
+            <select id="s-customer"></select>
+          </label>
+
+          <!-- فقط برای نوع «مصرف خانوادگی» نشان داده شود -->
+          <label class="field" id="s-person-wrap" hidden>
+            <span>چه کسی گرفت؟</span>
+            <select id="s-person"></select>
+            <small class="hint">به قیمت خرید حساب می‌شود.</small>
+          </label>
+
+          <div class="preview" id="sale-preview">
+            <div><span class="preview-k">مبلغ فروش</span><b id="s-prev-total">—</b><small>افغانی</small></div>
+            <div id="s-prev-cost-wrap" hidden><span class="preview-k">ارزش به قیمت خرید</span><b id="s-prev-cost">—</b><small>افغانی</small></div>
+            <div><span class="preview-k">موجودی این دسته</span><b id="s-prev-stock">—</b><small>لیتر</small></div>
+          </div>
+
+          <div class="form-error field-wide" id="s-error" hidden></div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">ثبت فروش</button>
+            <button type="reset" class="btn btn-ghost">پاک‌کردن فرم</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">فهرست فروش‌ها</h2>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>تاریخ</th><th>دسته</th><th>لیتر</th><th>نوع</th><th>طرف حساب</th><th>قیمت هر لیتر</th><th>مبلغ</th><th></th></tr>
+            </thead>
+            <tbody id="sale-body"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="sale-empty">هنوز فروشی ثبت نشده.</p>
+      </section>
+    </section>
+
+    <!-- =====================================================
+         موجودی
+         ===================================================== -->
+    <section class="page" id="page-stock">
+      <div class="stock-cards" id="stock-cards"></div>
+      <p class="empty" id="stock-cards-empty">هنوز دسته‌ای ثبت نشده. از تنظیمات یک دسته اضافه کنید.</p>
+    </section>
+
+    <!-- =====================================================
+         مشتریان قرضدار
+         دو نما دارد: فهرست (customers-list-view) و حساب یک مشتری (customers-detail-view).
+         هر بار فقط یکی دیده شود (با ویژگی hidden).
+         ===================================================== -->
+    <section class="page" id="page-customers">
+
+      <div id="customers-list-view">
+        <div class="two-col two-col-wide-left">
+          <section class="panel">
+            <h2 class="panel-title">فهرست قرضداران</h2>
+            <div class="table-wrap">
+              <table class="table table-click">
+                <thead><tr><th>نام</th><th>تلفن</th><th>باقی‌مانده</th><th>آخرین پرداخت</th><th></th></tr></thead>
+                <tbody id="customer-body"></tbody>
+              </table>
+            </div>
+            <p class="empty" id="customer-empty">هنوز مشتری قرضداری ثبت نشده.</p>
+            <div class="total-line">
+              <span>مجموع باقی‌مانده همه مشتریان</span>
+              <b><span id="customers-total">۰</span> <small>افغانی</small></b>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h2 class="panel-title">افزودن مشتری</h2>
+            <form id="customer-form" class="form-grid one-col" autocomplete="off">
+              <label class="field">
+                <span>نام</span>
+                <input type="text" id="cu-name" required>
+              </label>
+              <label class="field">
+                <span>شماره تماس (اختیاری)</span>
+                <input type="text" id="cu-phone" class="num" inputmode="tel">
+              </label>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">افزودن مشتری</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+
+      <div id="customers-detail-view" hidden>
+        <button class="btn btn-ghost btn-small back-btn" id="customer-back" type="button">← بازگشت به فهرست</button>
+
+        <section class="panel detail-head">
+          <div>
+            <div class="detail-name" id="cd-name">—</div>
+            <div class="detail-sub" id="cd-phone">—</div>
+          </div>
+          <div class="detail-balance">
+            <span class="detail-balance-k">باقی‌مانده</span>
+            <b><span id="cd-balance">۰</span> <small>افغانی</small></b>
+          </div>
+        </section>
+
+        <div class="two-col two-col-wide-left">
+          <section class="panel">
+            <h2 class="panel-title">حساب (قرض‌ها و پرداخت‌ها)</h2>
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>تاریخ</th><th>شرح</th><th>قرض</th><th>پرداخت</th><th>باقی‌مانده</th><th></th></tr></thead>
+                <tbody id="ledger-body"></tbody>
+              </table>
+            </div>
+            <p class="empty" id="ledger-empty">هنوز حرکتی در این حساب نیست.</p>
+          </section>
+
+          <section class="panel">
+            <h2 class="panel-title">ثبت پرداخت</h2>
+            <form id="payment-form" class="form-grid one-col" autocomplete="off">
+              <label class="field">
+                <span>تاریخ</span>
+                <input type="text" id="pay-date" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۶" required>
+              </label>
+              <label class="field">
+                <span>مبلغ (افغانی)</span>
+                <input type="number" id="pay-amount" class="num" step="any" min="0" inputmode="decimal" required>
+              </label>
+              <label class="field">
+                <span>توضیح (اختیاری)</span>
+                <input type="text" id="pay-note">
+              </label>
+              <div class="form-error" id="pay-error" hidden></div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">ثبت پرداخت</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         برادرها و پدر
+         ===================================================== -->
+    <section class="page" id="page-people">
+
+      <div id="people-list-view">
+        <section class="panel">
+          <h2 class="panel-title">حساب برادرها و پدر</h2>
+          <div class="table-wrap">
+            <table class="table table-click">
+              <thead>
+                <tr>
+                  <th>نام</th><th>نقش</th><th>تیل گرفته (لیتر)</th><th>تیل فروخته (لیتر)</th>
+                  <th>پول گرفته</th><th>پول داده به شما</th><th>پول نزد او</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="person-body"></tbody>
+            </table>
+          </div>
+          <p class="empty" id="person-empty">هنوز کسی ثبت نشده. از فرم پایین اضافه کنید.</p>
+        </section>
+
+        <div class="two-col two-col-wide-left">
+          <section class="panel">
+            <h2 class="panel-title">ثبت حرکت</h2>
+            <form id="movement-form" class="form-grid" autocomplete="off">
+              <label class="field">
+                <span>شخص</span>
+                <select id="m-person" required></select>
+              </label>
+              <label class="field">
+                <span>تاریخ</span>
+                <input type="text" id="m-date" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۶" required>
+              </label>
+
+              <fieldset class="field field-wide segmented" id="m-kind">
+                <legend>نوع حرکت</legend>
+                <label class="seg"><input type="radio" name="move-kind" value="fuel_take" checked><span>تیل گرفت</span></label>
+                <label class="seg"><input type="radio" name="move-kind" value="fuel_sold"><span>تیل فروخت</span></label>
+                <label class="seg"><input type="radio" name="move-kind" value="money_take"><span>پول گرفت</span></label>
+                <label class="seg"><input type="radio" name="move-kind" value="money_give"><span>پول داد به من</span></label>
+              </fieldset>
+
+              <!-- این گروه‌ها را بسته به نوع حرکت، با ویژگی hidden نشان بدهید یا پنهان کنید.
+                   data-kinds = نوع‌هایی که این فیلد برایشان لازم است -->
+              <label class="field" data-kinds="fuel_take fuel_sold">
+                <span>دسته</span>
+                <select id="m-category"></select>
+              </label>
+              <label class="field" data-kinds="fuel_take fuel_sold">
+                <span>مقدار (لیتر)</span>
+                <input type="number" id="m-liters" class="num" step="any" min="0" inputmode="decimal">
+              </label>
+              <label class="field" data-kinds="fuel_sold" hidden>
+                <span>قیمت فروش هر لیتر (افغانی)</span>
+                <input type="number" id="m-price" class="num" step="any" min="0" inputmode="decimal">
+              </label>
+              <label class="field" data-kinds="money_take money_give" hidden>
+                <span>مبلغ (افغانی)</span>
+                <input type="number" id="m-amount" class="num" step="any" min="0" inputmode="decimal">
+              </label>
+              <label class="field field-wide">
+                <span>توضیح (اختیاری)</span>
+                <input type="text" id="m-note">
+              </label>
+
+              <div class="preview" id="m-preview">
+                <div><span class="preview-k" id="m-prev-k">ارزش به قیمت خرید</span><b id="m-prev-value">—</b><small>افغانی</small></div>
+              </div>
+
+              <div class="form-error field-wide" id="m-error" hidden></div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">ثبت حرکت</button>
+                <button type="reset" class="btn btn-ghost">پاک‌کردن فرم</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel">
+            <h2 class="panel-title">افزودن شخص</h2>
+            <form id="person-form" class="form-grid one-col" autocomplete="off">
+              <label class="field">
+                <span>نام</span>
+                <input type="text" id="pe-name" required>
+              </label>
+              <label class="field">
+                <span>نقش</span>
+                <select id="pe-role">
+                  <option value="brother">برادر</option>
+                  <option value="father">پدر</option>
+                </select>
+              </label>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">افزودن</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+
+      <div id="people-detail-view" hidden>
+        <button class="btn btn-ghost btn-small back-btn" id="person-back" type="button">← بازگشت به فهرست</button>
+
+        <section class="panel detail-head">
+          <div>
+            <div class="detail-name" id="pd-name">—</div>
+            <div class="detail-sub" id="pd-role">—</div>
+          </div>
+          <div class="detail-balance">
+            <span class="detail-balance-k">پول نزد او</span>
+            <b><span id="pd-held">۰</span> <small>افغانی</small></b>
+          </div>
+        </section>
+
+        <div class="stat-grid stat-grid-5">
+          <article class="stat"><div class="stat-label">تیل گرفته</div><div class="stat-value"><span id="pd-fuel-taken">۰</span><small>لیتر</small></div><div class="stat-sub">ارزش: <span id="pd-fuel-taken-value">۰</span> افغانی</div></article>
+          <article class="stat"><div class="stat-label">تیل فروخته</div><div class="stat-value"><span id="pd-fuel-sold">۰</span><small>لیتر</small></div><div class="stat-sub">پول آن: <span id="pd-fuel-sold-value">۰</span> افغانی</div></article>
+          <article class="stat"><div class="stat-label">پول گرفته</div><div class="stat-value"><span id="pd-money-taken">۰</span><small>افغانی</small></div></article>
+          <article class="stat"><div class="stat-label">پول داده به شما</div><div class="stat-value"><span id="pd-money-given">۰</span><small>افغانی</small></div></article>
+          <article class="stat stat-cash"><div class="stat-label">پول نزد او</div><div class="stat-value"><span id="pd-held-2">۰</span><small>افغانی</small></div></article>
+        </div>
+
+        <section class="panel">
+          <h2 class="panel-title">حرکت‌ها</h2>
+          <div class="filters">
+            <label class="field inline"><span>از</span><input type="text" id="person-from" class="date-input num" placeholder="۱۴۰۵/۰۷/۰۱"></label>
+            <label class="field inline"><span>تا</span><input type="text" id="person-to" class="date-input num" placeholder="۱۴۰۵/۰۷/۳۰"></label>
+            <button class="btn btn-ghost btn-small" id="person-filter-clear" type="button">همه</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>تاریخ</th><th>حرکت</th><th>دسته</th><th>لیتر</th><th>مبلغ</th><th>توضیح</th><th></th></tr></thead>
+              <tbody id="person-ledger-body"></tbody>
+            </table>
+          </div>
+          <p class="empty" id="person-ledger-empty">هنوز حرکتی ثبت نشده.</p>
+        </section>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         پول و تحویل به پدر
+         ===================================================== -->
+    <section class="page" id="page-cash">
+      <div class="stat-grid stat-grid-4">
+        <article class="stat stat-ok"><div class="stat-label">پول وارد شده</div><div class="stat-value"><span id="cash-in">۰</span><small>افغانی</small></div></article>
+        <article class="stat stat-petrol"><div class="stat-label">پول خارج شده</div><div class="stat-value"><span id="cash-out">۰</span><small>افغانی</small></div></article>
+        <article class="stat stat-cash"><div class="stat-label">پول نزد شما</div><div class="stat-value"><span id="cash-balance">۰</span><small>افغانی</small></div></article>
+        <article class="stat"><div class="stat-label">مجموع تحویل به پدر</div><div class="stat-value"><span id="cash-handed">۰</span><small>افغانی</small></div></article>
+      </div>
+
+      <div class="two-col">
+        <section class="panel">
+          <h2 class="panel-title">پول از کجا آمده و کجا رفته</h2>
+          <dl class="breakdown">
+            <div class="breakdown-group">وارد شده</div>
+            <div><dt>فروش نقد</dt><dd><span id="cash-sales">۰</span></dd></div>
+            <div><dt>پرداخت مشتریان قرضدار</dt><dd><span id="cash-customer-payments">۰</span></dd></div>
+            <div><dt>پولی که برادرها و پدر به شما داده‌اند</dt><dd><span id="cash-person-give">۰</span></dd></div>
+            <div class="breakdown-group">خارج شده</div>
+            <div><dt>پولی که برادرها و پدر گرفته‌اند</dt><dd><span id="cash-person-take">۰</span></dd></div>
+            <div><dt>تحویل به پدر</dt><dd><span id="cash-handover-total">۰</span></dd></div>
+          </dl>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">ثبت تحویل به پدر</h2>
+          <form id="handover-form" class="form-grid one-col" autocomplete="off">
+            <label class="field">
+              <span>تاریخ</span>
+              <input type="text" id="h-date" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۶" required>
+            </label>
+            <label class="field">
+              <span>مبلغ (افغانی)</span>
+              <input type="number" id="h-amount" class="num" step="any" min="0" inputmode="decimal" required>
+            </label>
+            <label class="field">
+              <span>توضیح (اختیاری)</span>
+              <input type="text" id="h-note">
+            </label>
+            <div class="form-error" id="h-error" hidden></div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">ثبت تحویل</button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <section class="panel">
+        <h2 class="panel-title">فهرست تحویل‌ها به پدر</h2>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>تاریخ</th><th>مبلغ</th><th>توضیح</th><th></th></tr></thead>
+            <tbody id="handover-body"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="handover-empty">هنوز تحویلی ثبت نشده.</p>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">شمارش صندوق</h2>
+        <p class="panel-note">پولی را که واقعاً در دست دارید بشمارید و وارد کنید تا تفاوت با حساب سیستم معلوم شود.</p>
+        <form id="count-form" class="form-grid" autocomplete="off">
+          <label class="field">
+            <span>تاریخ</span>
+            <input type="text" id="count-date" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۶" required>
+          </label>
+          <label class="field">
+            <span>پول شمرده‌شده (افغانی)</span>
+            <input type="number" id="count-amount" class="num" step="any" min="0" inputmode="decimal" required>
+          </label>
+          <div class="preview" id="count-preview">
+            <div><span class="preview-k">طبق سیستم</span><b id="count-system">—</b><small>افغانی</small></div>
+            <div><span class="preview-k">تفاوت</span><b id="count-diff">—</b><small>افغانی</small></div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">ثبت شمارش</button>
+          </div>
+        </form>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>تاریخ</th><th>شمرده‌شده</th><th>طبق سیستم</th><th>تفاوت</th><th></th></tr></thead>
+            <tbody id="count-body"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="count-empty">هنوز شمارشی ثبت نشده.</p>
+      </section>
+    </section>
+
+    <!-- =====================================================
+         مصارف دوکان
+         ===================================================== -->
+    <section class="page" id="page-expenses">
+      <section class="panel">
+        <h2 class="panel-title">ثبت مصرف جدید</h2>
+        <form id="expense-form" class="form-grid" autocomplete="off">
+          <label class="field">
+            <span>تاریخ</span>
+            <input type="text" id="e-date" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۶" required>
+          </label>
+          <label class="field">
+            <span>عنوان</span>
+            <input type="text" id="e-title" list="expense-titles" placeholder="مثلاً معاش، کرایه، برق" required>
+            <datalist id="expense-titles"></datalist>
+          </label>
+          <label class="field">
+            <span>مبلغ (افغانی)</span>
+            <input type="number" id="e-amount" class="num" step="any" min="0" inputmode="decimal" required>
+          </label>
+          <label class="field field-wide">
+            <span>توضیح (اختیاری)</span>
+            <input type="text" id="e-note">
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">ثبت مصرف</button>
+            <button type="reset" class="btn btn-ghost">پاک‌کردن فرم</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">فهرست مصارف</h2>
+        <div class="filters">
+          <label class="field inline"><span>از</span><input type="text" id="e-from" class="date-input num" placeholder="۱۴۰۵/۰۷/۰۱"></label>
+          <label class="field inline"><span>تا</span><input type="text" id="e-to" class="date-input num" placeholder="۱۴۰۵/۰۷/۳۰"></label>
+          <button class="btn btn-ghost btn-small" id="e-filter-clear" type="button">همه</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>تاریخ</th><th>عنوان</th><th>مبلغ</th><th>توضیح</th><th></th></tr></thead>
+            <tbody id="expense-body"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="expense-empty">هنوز مصرفی ثبت نشده.</p>
+        <div class="total-line">
+          <span>مجموع مصارف در این دوره</span>
+          <b><span id="expense-total">۰</span> <small>افغانی</small></b>
+        </div>
+      </section>
+    </section>
+
+    <!-- =====================================================
+         گزارش هفته‌وار
+         چاپ: دکمه report-print فقط window.print() را صدا می‌زند و
+         در پنجره چاپ «ذخیره به‌صورت PDF» را انتخاب می‌کنید.
+         فقط #report-sheet چاپ می‌شود (قواعد @media print در pages.css).
+         ===================================================== -->
+    <section class="page" id="page-reports">
+      <section class="panel no-print">
+        <h2 class="panel-title">انتخاب دوره</h2>
+        <div class="filters">
+          <label class="field inline"><span>از</span><input type="text" id="rep-from" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۱"></label>
+          <label class="field inline"><span>تا</span><input type="text" id="rep-to" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۷"></label>
+          <button class="btn btn-ghost btn-small" id="rep-this-week" type="button">این هفته</button>
+          <button class="btn btn-ghost btn-small" id="rep-last-week" type="button">هفته قبل</button>
+          <button class="btn btn-primary" id="rep-build" type="button">ساخت گزارش</button>
+          <button class="btn btn-ghost" id="rep-print" type="button">چاپ / ذخیره PDF</button>
+        </div>
+      </section>
+
+      <article class="sheet" id="report-sheet">
+        <header class="sheet-head">
+          <div class="sheet-brand">
+            <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M24 4C24 4 10 20 10 31a14 14 0 0 0 28 0C38 20 24 4 24 4Z" fill="currentColor"/>
+              <path d="M17 32a7 7 0 0 0 7 7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <div>
+              <h2 id="rep-title">گزارش هفته‌وار دوکان تیل</h2>
+              <div class="sheet-period">دوره: <b id="rep-period">—</b></div>
+            </div>
+          </div>
+          <div class="sheet-meta">
+            <div>تاریخ تهیه: <span id="rep-created">—</span></div>
+            <div>تهیه‌کننده: <span id="rep-author">—</span></div>
+          </div>
+        </header>
+
+        <section class="sheet-sec">
+          <h3>۱. خلاصه هفته</h3>
+          <table class="table sheet-table">
+            <thead><tr><th>مورد</th><th>لیتر</th><th>مبلغ (افغانی)</th></tr></thead>
+            <tbody id="rep-summary-body"></tbody>
+          </table>
+          <p class="sheet-note">سود تقریبی = فروش نقد و قرضه − قیمت خرید همان لیترها − مصارف دوکان. مصرف خانوادگی در سود نمی‌آید.</p>
+        </section>
+
+        <section class="sheet-sec">
+          <h3>۲. موجودی تیل (لیتر)</h3>
+          <table class="table sheet-table">
+            <thead><tr><th>دسته</th><th>اول هفته</th><th>خرید</th><th>خروج</th><th>آخر هفته</th></tr></thead>
+            <tbody id="rep-stock-body"></tbody>
+          </table>
+        </section>
+
+        <section class="sheet-sec">
+          <h3>۳. پول</h3>
+          <table class="table sheet-table">
+            <thead><tr><th>مورد</th><th>مبلغ (افغانی)</th></tr></thead>
+            <tbody id="rep-cash-body"></tbody>
+          </table>
+        </section>
+
+        <section class="sheet-sec">
+          <h3>۴. مشتریان قرضدار</h3>
+          <table class="table sheet-table">
+            <thead><tr><th>مشتری</th><th>قرض این هفته</th><th>پرداخت این هفته</th><th>باقی‌مانده</th></tr></thead>
+            <tbody id="rep-debt-body"></tbody>
+          </table>
+        </section>
+
+        <section class="sheet-sec">
+          <h3>۵. حساب برادرها و پدر</h3>
+          <table class="table sheet-table">
+            <thead>
+              <tr><th>نام</th><th>تیل گرفته (لیتر)</th><th>تیل فروخته (لیتر)</th><th>پول گرفته</th><th>پول داده</th><th>پول نزد او</th></tr>
+            </thead>
+            <tbody id="rep-people-body"></tbody>
+          </table>
+        </section>
+
+        <section class="sheet-sec">
+          <h3>۶. ثبت‌های باطل‌شده</h3>
+          <table class="table sheet-table">
+            <thead><tr><th>تاریخ</th><th>نوع</th><th>شرح</th><th>دلیل باطل‌شدن</th></tr></thead>
+            <tbody id="rep-void-body"></tbody>
+          </table>
+          <p class="sheet-note" id="rep-void-empty">در این دوره ثبتی باطل نشده است.</p>
+        </section>
+
+        <footer class="sheet-foot">
+          <div class="sign"><span>تحویل‌دهنده</span></div>
+          <div class="sign"><span>تحویل‌گیرنده (پدر)</span></div>
+        </footer>
+      </article>
+    </section>
+
+    <!-- =====================================================
+         تنظیمات
+         ===================================================== -->
+    <section class="page" id="page-settings">
+      <div class="two-col">
+        <section class="panel">
+          <h2 class="panel-title">دسته‌های تیل</h2>
+          <form id="category-form" class="form-grid compact" autocomplete="off">
+            <label class="field">
+              <span>نام دسته</span>
+              <input type="text" id="c-name" placeholder="مثلاً دیزل ایرانی" required>
+            </label>
+            <label class="field">
+              <span>گروه</span>
+              <select id="c-group">
+                <option value="diesel">دیزل</option>
+                <option value="petrol">پطرول</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>ثقلت (کیلوگرم در لیتر)</span>
+              <input type="number" id="c-density" class="num" step="any" min="0" inputmode="decimal" required>
+            </label>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">افزودن دسته</button>
+            </div>
+          </form>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>نام</th><th>گروه</th><th>ثقلت</th><th></th></tr></thead>
+              <tbody id="category-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">قیمت فروش</h2>
+          <form id="price-form" class="form-grid compact" autocomplete="off">
+            <label class="field">
+              <span>دسته</span>
+              <select id="pr-category" required></select>
+            </label>
+            <label class="field">
+              <span>از تاریخ</span>
+              <input type="text" id="pr-date" class="date-input num" placeholder="۱۴۰۵/۰۷/۲۶" required>
+            </label>
+            <label class="field">
+              <span>قیمت هر لیتر (افغانی)</span>
+              <input type="number" id="pr-price" class="num" step="any" min="0" inputmode="decimal" required>
+            </label>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">ثبت قیمت جدید</button>
+            </div>
+          </form>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>دسته</th><th>از تاریخ</th><th>قیمت هر لیتر</th></tr></thead>
+              <tbody id="price-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <div class="two-col">
+        <section class="panel">
+          <h2 class="panel-title">تنظیمات عمومی</h2>
+          <form id="general-form" class="form-grid compact" autocomplete="off">
+            <label class="field">
+              <span>ظرفیت یک بیلر (لیتر)</span>
+              <input type="number" id="set-bilar" class="num" step="any" min="0" inputmode="decimal">
+            </label>
+            <label class="field">
+              <span>نوع تاریخ</span>
+              <select id="set-calendar">
+                <option value="persian">شمسی</option>
+                <option value="islamic">قمری</option>
+                <option value="gregory">میلادی</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>نام شما (برای گزارش)</span>
+              <input type="text" id="set-author">
+            </label>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">ذخیره تنظیمات</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">تغییر رمز عبور</h2>
+          <form id="password-form" class="form-grid compact" autocomplete="off">
+            <label class="field">
+              <span>رمز فعلی</span>
+              <input type="password" id="old-password" class="num" required>
+            </label>
+            <label class="field">
+              <span>رمز جدید</span>
+              <input type="password" id="new-password" class="num" required>
+            </label>
+            <label class="field">
+              <span>تکرار رمز جدید</span>
+              <input type="password" id="new-password2" class="num" required>
+            </label>
+            <div class="form-error field-wide" id="password-error" hidden></div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">تغییر رمز</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============================================================
+     تقویم انتخاب تاریخ (کادر شناور)
+     جی‌اس: هنگام فوکوس روی هر input.date-input، این کادر را زیر آن بگذارید
+     و dp-grid را با دکمه‌های روز پر کنید (کلاس‌ها در pages.css).
+     ============================================================ -->
+<div class="datepicker" id="datepicker" hidden>
+  <div class="dp-head">
+    <button type="button" class="dp-nav" id="dp-next" aria-label="ماه بعد">‹</button>
+    <div class="dp-title" id="dp-title">—</div>
+    <button type="button" class="dp-nav" id="dp-prev" aria-label="ماه قبل">›</button>
+  </div>
+  <div class="dp-weekdays" id="dp-weekdays">
+    <span>ش</span><span>ی</span><span>د</span><span>س</span><span>چ</span><span>پ</span><span>ج</span>
+  </div>
+  <div class="dp-grid" id="dp-grid"></div>
+  <div class="dp-foot">
+    <button type="button" class="btn btn-ghost btn-small" id="dp-today">امروز</button>
+    <button type="button" class="btn btn-ghost btn-small" id="dp-close">بستن</button>
+  </div>
+</div>
+
+<!-- پنجره دلیل باطل‌کردن (برای هر نوع ثبت) -->
+<dialog id="void-dialog" class="dialog">
+  <form method="dialog">
+    <h3>باطل‌کردن ثبت</h3>
+    <p id="void-summary">ثبت پاک نمی‌شود، فقط باطل می‌شود و در گزارش با دلیل می‌آید.</p>
+    <textarea id="void-reason" rows="3" placeholder="دلیل باطل‌کردن را بنویسید" required></textarea>
+    <div class="dialog-actions">
+      <button value="confirm" class="btn btn-danger" id="void-confirm">باطل شود</button>
+      <button value="cancel" class="btn btn-ghost" formnovalidate>انصراف</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- پنجره تأیید بازگردانی پشتیبان -->
+<dialog id="restore-dialog" class="dialog">
+  <form method="dialog">
+    <h3>بازگردانی پشتیبان</h3>
+    <p id="restore-summary">با بازگردانی، همه اطلاعات فعلی با محتوای فایل جایگزین می‌شود. پیش از آن از اطلاعات فعلی یک پشتیبان خودکار گرفته می‌شود.</p>
+    <div class="dialog-actions">
+      <button value="confirm" class="btn btn-danger" id="restore-confirm">بازگردانی شود</button>
+      <button value="cancel" class="btn btn-ghost">انصراف</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="main.js"></script>
+<!-- فایل‌های جی‌اس شما: logic.js, db.js, app.js را اینجا اضافه کنید -->
+
+</body>
+</html>
