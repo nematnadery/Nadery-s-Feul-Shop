@@ -338,9 +338,10 @@ body:not(.locked) .login { display: none; }
 .app__bar .btn { margin-inline-start: auto; }
 
 .app__main {
+  flex: 1;
+  min-width: 0;
   max-width: 960px;
-  margin: 0 auto;
-  padding: 48px 24px;
+  padding: 40px 32px;
 }
 
 .app__title {
@@ -355,6 +356,63 @@ body:not(.locked) .login { display: none; }
   max-width: 48ch;
   margin: 0;
   color: var(--muted);
+}
+
+/* ---------- منوی کناری و صفحه‌ها ---------- */
+.app__body {
+  display: flex;
+  align-items: stretch;
+  min-height: calc(100vh - 64px);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 0 0 230px;
+  padding: 16px 0;
+  background: var(--steel-800);
+}
+
+.nav-item {
+  display: block;
+  width: 100%;
+  padding: 12px 24px;
+  font: inherit;
+  text-align: start;
+  color: rgba(234, 241, 243, .78);
+  background: transparent;
+  border: 0;
+  border-inline-start: 4px solid transparent;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.nav-item:hover { background: rgba(234, 241, 243, .08); color: #fff; }
+.nav-item:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
+.nav-item.active {
+  color: #fff;
+  font-weight: 700;
+  background: rgba(242, 154, 31, .16);
+  border-inline-start-color: var(--amber);
+}
+
+/* فقط صفحه active دیده شود */
+.page { display: none; }
+.page.active { display: block; }
+
+@media (max-width: 820px) {
+  .app__body { flex-direction: column; }
+  .nav { flex: none; flex-direction: row; overflow-x: auto; padding: 0; }
+  .nav-item {
+    flex: none;
+    width: auto;
+    padding: 12px 18px;
+    white-space: nowrap;
+    border-inline-start: 0;
+    border-bottom: 4px solid transparent;
+  }
+  .nav-item.active { border-bottom-color: var(--amber); }
+  .app__main { padding: 28px 20px; }
 }
 
 /* ============================================================

@@ -83,10 +83,37 @@
       <button class="btn btn--ghost" type="button" id="btn-logout">خروج</button>
     </header>
 
-    <main class="app__main">
-      <h1 class="app__title">صفحه اصلی</h1>
-      <p class="app__empty">هنوز بخشی اضافه نشده. خرید، فروش و موجودی را قدم‌به‌قدم اینجا می‌گذاریم.</p>
-    </main>
+    <div class="app__body">
+      <!-- منوی کناری: هر دکمه data-page دارد که اسم صفحه‌اش است -->
+      <nav class="nav" id="nav" aria-label="منوی اصلی">
+        <button class="nav-item active" type="button" data-page="dashboard">داشبورد</button>
+        <button class="nav-item" type="button" data-page="sales">فروش</button>
+        <button class="nav-item" type="button" data-page="purchases">خرید</button>
+        <button class="nav-item" type="button" data-page="stock">موجودی</button>
+        <button class="nav-item" type="button" data-page="customers">مشتریان قرضدار</button>
+        <button class="nav-item" type="button" data-page="people">برادرها و پدر</button>
+        <button class="nav-item" type="button" data-page="cash">پول و تحویل به پدر</button>
+        <button class="nav-item" type="button" data-page="expenses">مصارف دوکان</button>
+        <button class="nav-item" type="button" data-page="reports">گزارش هفته‌وار</button>
+        <button class="nav-item" type="button" data-page="settings">تنظیمات</button>
+      </nav>
+
+      <main class="app__main">
+        <h1 class="app__title" id="page-title">داشبورد</h1>
+
+        <!-- صفحه‌ها: id هر کدام page- + اسم صفحه است. فقط یکی active دارد. -->
+        <section class="page active" id="page-dashboard"><p class="app__empty">صفحه «داشبورد» هنوز خالی است.</p></section>
+        <section class="page" id="page-sales"><p class="app__empty">صفحه «فروش» هنوز خالی است.</p></section>
+        <section class="page" id="page-purchases"><p class="app__empty">صفحه «خرید» هنوز خالی است.</p></section>
+        <section class="page" id="page-stock"><p class="app__empty">صفحه «موجودی» هنوز خالی است.</p></section>
+        <section class="page" id="page-customers"><p class="app__empty">صفحه «مشتریان قرضدار» هنوز خالی است.</p></section>
+        <section class="page" id="page-people"><p class="app__empty">صفحه «برادرها و پدر» هنوز خالی است.</p></section>
+        <section class="page" id="page-cash"><p class="app__empty">صفحه «پول و تحویل به پدر» هنوز خالی است.</p></section>
+        <section class="page" id="page-expenses"><p class="app__empty">صفحه «مصارف دوکان» هنوز خالی است.</p></section>
+        <section class="page" id="page-reports"><p class="app__empty">صفحه «گزارش هفته‌وار» هنوز خالی است.</p></section>
+        <section class="page" id="page-settings"><p class="app__empty">صفحه «تنظیمات» هنوز خالی است.</p></section>
+      </main>
+     </div>
   </div>
 
   <script src="main.js"></script>
