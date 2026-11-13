@@ -111,7 +111,103 @@
         <section class="page" id="page-cash"><p class="app__empty">صفحه «پول و تحویل به پدر» هنوز خالی است.</p></section>
         <section class="page" id="page-expenses"><p class="app__empty">صفحه «مصارف دوکان» هنوز خالی است.</p></section>
         <section class="page" id="page-reports"><p class="app__empty">صفحه «گزارش هفته‌وار» هنوز خالی است.</p></section>
-        <section class="page" id="page-settings"><p class="app__empty">صفحه «تنظیمات» هنوز خالی است.</p></section>
+                <section class="page" id="page-settings">
+
+          <!-- ۱) دسته‌های تیل -->
+          <div class="card">
+            <h2 class="card__title">دسته‌های تیل</h2>
+            <p class="card__hint">هر نوع تیل یک دسته است. ثقلت یعنی وزن یک لیتر تیل به کیلوگرم (مثلاً ۰٫۸۴).</p>
+
+            <form class="form-grid" id="category-form" autocomplete="off">
+              <label class="field">
+                <span class="field__label">نام دسته</span>
+                <input class="field__input field__input--text" type="text" id="c-name" required>
+              </label>
+
+              <label class="field">
+                <span class="field__label">گروه</span>
+                <select class="field__input field__input--text" id="c-group">
+                  <option value="diesel">دیزل</option>
+                  <option value="petrol">پطرول</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span class="field__label">ثقلت</span>
+                <input class="field__input" type="number" id="c-density" step="0.001" min="0.1" required>
+              </label>
+
+              <button class="btn btn--inline" type="submit">افزودن دسته</button>
+            </form>
+
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr><th>نام</th><th>گروه</th><th>ثقلت</th><th></th></tr>
+                </thead>
+                <!-- جی‌اس برای هر دسته یک ردیف اینجا می‌سازد. شکل هر ردیف:
+                     <tr>
+                       <td>دیزل روسی</td>
+                       <td><span class="tag tag--diesel">دیزل</span></td>
+                       <td>0.84</td>
+                       <td><button class="btn-link-danger" type="button">حذف</button></td>
+                     </tr> -->
+                <tbody id="category-body"></tbody>
+              </table>
+            </div>
+            <p class="empty" id="category-empty">هنوز دسته‌ای اضافه نشده.</p>
+          </div>
+
+          <!-- ۲) ظرفیت بیلر -->
+          <div class="card">
+            <h2 class="card__title">ظرفیت بیلر</h2>
+            <p class="card__hint">یک بیلر چند لیتر است؟ این عدد هنگام ثبت خرید به لیتر تبدیل می‌شود.</p>
+
+            <form class="form-grid form-grid--short" id="general-form" autocomplete="off">
+              <label class="field">
+                <span class="field__label">ظرفیت بیلر (لیتر)</span>
+                <input class="field__input" type="number" id="set-bilar" min="1" required>
+              </label>
+              <button class="btn btn--inline" type="submit">ذخیره</button>
+            </form>
+          </div>
+
+          <!-- ۳) قیمت فروش -->
+          <div class="card">
+            <h2 class="card__title">قیمت فروش</h2>
+            <p class="card__hint">قیمت هر لیتر به افغانی. هر وقت قیمت عوض شد، یک ردیف تازه با تاریخ همان روز اضافه کنید. ردیف‌های قبلی می‌مانند.</p>
+
+            <form class="form-grid" id="price-form" autocomplete="off">
+              <label class="field">
+                <span class="field__label">دسته</span>
+                <select class="field__input field__input--text" id="pr-category" required></select>
+              </label>
+
+              <label class="field">
+                <span class="field__label">از تاریخ</span>
+                <input class="field__input" type="date" id="pr-date" required>
+              </label>
+
+              <label class="field">
+                <span class="field__label">قیمت هر لیتر (افغانی)</span>
+                <input class="field__input" type="number" id="pr-price" min="0" step="any" required>
+              </label>
+
+              <button class="btn btn--inline" type="submit">ثبت قیمت</button>
+            </form>
+
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr><th>دسته</th><th>از تاریخ</th><th>قیمت (افغانی)</th></tr>
+                </thead>
+                <tbody id="price-body"></tbody>
+              </table>
+            </div>
+            <p class="empty" id="price-empty">هنوز قیمتی ثبت نشده.</p>
+          </div>
+
+        </section>
       </main>
      </div>
   </div>

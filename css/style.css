@@ -449,3 +449,99 @@ body:not(.locked) .login { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .tank__fuel, .form-error { animation: none; }
 }
+
+/* ===== فاز ۳: کارت‌ها، فرم‌ها و جدول‌ها ===== */
+.card {
+  margin-bottom: 28px;
+  padding: 24px 28px;
+  background: #fff;
+  border: 1px solid #cdd8dc;
+  border-top: 4px solid var(--amber);
+  border-radius: 6px;
+}
+.card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.4;
+}
+.card__hint {
+  margin: 2px 0 22px;
+  font-size: .9rem;
+  color: var(--muted);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) auto;
+  align-items: end;
+  gap: 4px 24px;
+}
+.form-grid--short { grid-template-columns: minmax(200px, 320px) auto; justify-content: start; }
+.form-grid .field { margin-bottom: 8px; }
+
+.field__input--text { direction: rtl; }
+select.field__input { cursor: pointer; }
+
+.btn--inline {
+  width: auto;
+  margin-bottom: 8px;
+  padding: 11px 22px;
+  white-space: nowrap;
+}
+
+.table-wrap { margin-top: 20px; overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; }
+.table th {
+  padding: 8px 12px;
+  font-size: .85rem;
+  font-weight: 500;
+  text-align: start;
+  color: var(--muted);
+  border-bottom: 2px solid var(--line);
+}
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #dbe4e7;
+}
+.table tbody tr:hover { background: #f3f7f8; }
+
+.tag {
+  display: inline-block;
+  padding: 1px 10px;
+  font-size: .8rem;
+  font-weight: 700;
+  border-radius: 99px;
+}
+.tag--diesel { color: #0d3b4a; background: #cfe6ee; }
+.tag--petrol { color: #5c3300; background: #fde1ba; }
+
+.btn-link-danger {
+  padding: 2px 8px;
+  font: inherit;
+  font-size: .9rem;
+  color: var(--danger);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.btn-link-danger:hover { color: var(--danger-ink); }
+
+/* پیام «خالی» زیر جدول: جی‌اس با hidden آن را نشان یا پنهان می‌کند */
+.empty {
+  margin: 14px 0 0;
+  padding: 14px;
+  text-align: center;
+  color: var(--muted);
+  background: #f3f7f8;
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+}
+
+@media (max-width: 820px) {
+  .card { padding: 20px 18px; }
+  .form-grid, .form-grid--short { grid-template-columns: 1fr; }
+  .btn--inline { width: 100%; }
+}
