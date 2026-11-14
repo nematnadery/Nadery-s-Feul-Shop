@@ -1,6 +1,10 @@
 let navItems = document.querySelectorAll('.nav-item')
 let pages = document.querySelectorAll('.page')
 let pageTitle = document.getElementById('page-title')
+let categoryForm = document.getElementById('category-form')
+let cName = document.getElementById('c-name')
+let cGroup = document.getElementById('c-group')
+let cDensity = document.getElementById('c-density')
 
 
 function showPage(name) {
@@ -32,3 +36,15 @@ let lastPage = localStorage.getItem('lastPage')
 if (lastPage) {
     showPage(lastPage)
 }
+
+
+categoryForm.addEventListener('submit', function (event) {
+    event.preventDefault()          // جلوگیری از رفرش صفحه
+
+    let name = cName.value.trim()   // فاصله‌های اول و آخر پاک می‌شود
+    let group = cGroup.value        // 'diesel' یا 'petrol'
+    let density = Number(cDensity.value)   // متن را به عدد تبدیل می‌کند
+
+    console.log(name, group, density)
+    console.log(typeof density)     // باید number چاپ شود
+})
