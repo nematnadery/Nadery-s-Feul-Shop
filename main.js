@@ -37,14 +37,29 @@ if (lastPage) {
     showPage(lastPage)
 }
 
-
+let categories = []
 categoryForm.addEventListener('submit', function (event) {
-    event.preventDefault()          // جلوگیری از رفرش صفحه
+    event.preventDefault()
 
-    let name = cName.value.trim()   // فاصله‌های اول و آخر پاک می‌شود
-    let group = cGroup.value        // 'diesel' یا 'petrol'
-    let density = Number(cDensity.value)   // متن را به عدد تبدیل می‌کند
+    let name = cName.value.trim()
+    let group = cGroup.value
+    let density = Number(cDensity.value)
 
-    console.log(name, group, density)
-    console.log(typeof density)     // باید number چاپ شود
+    // اگر نام خالی یا ثقلت نامعتبر بود، چیزی ثبت نکن
+    if (name === '' || density <= 0) {
+        return
+    }
+
+    // ساختن شیء دسته
+    let category = {
+        id: Date.now(),     // شناسه یکتا: زمان ثبت به میلی‌ثانیه
+        name: name,
+        group: group,
+        density: density
+    }
+
+    categories.push(category)   // گذاشتن در آرایه
+
+    console.log(categories)
+    categoryForm.reset()        // خالی‌کردن کادرها
 })
