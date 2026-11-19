@@ -5,7 +5,47 @@ let categoryForm = document.getElementById('category-form')
 let cName = document.getElementById('c-name')
 let cGroup = document.getElementById('c-group')
 let cDensity = document.getElementById('c-density')
+let categoryBody = document.getElementById('category-body')
+let categoryEmpty = document.getElementById('category-empty')
 
+
+function renderCategories() {
+    categoryBody.innerHTML = ''      // اول جدول را خالی کن
+
+    categories.forEach(function (category) {
+        let tr = document.createElement('tr')
+
+        // ستون نام
+        let tdName = document.createElement('td')
+        tdName.textContent = category.name
+
+        // ستون گروه (با برچسب رنگی)
+        let tdGroup = document.createElement('td')
+        let tag = document.createElement('span')
+        tag.className = 'tag tag--' + category.group
+        tag.textContent = category.group === 'diesel' ? 'دیزل' : 'پطرول'
+        tdGroup.appendChild(tag)
+
+        // ستون ثقلت
+        let tdDensity = document.createElement('td')
+        tdDensity.textContent = category.density
+
+        // ستون حذف (فعلاً فقط دکمه، کارش در ۳-۵ است)
+        let tdDelete = document.createElement('td')
+        let btn = document.createElement('button')
+        btn.className = 'btn-link-danger'
+        btn.type = 'button'
+        btn.textContent = 'حذف'
+        tdDelete.appendChild(btn)
+
+        // چسباندن همه به ردیف و ردیف به جدول
+        tr.append(tdName, tdGroup, tdDensity, tdDelete)
+        categoryBody.appendChild(tr)
+    })
+
+    // پیام «خالی»: فقط وقتی آرایه خالی است دیده شود
+    categoryEmpty.hidden = categories.length > 0
+}
 
 function showPage(name) {
     pages.forEach(function (page) {
@@ -58,8 +98,7 @@ categoryForm.addEventListener('submit', function (event) {
         density: density
     }
 
-    categories.push(category)   // گذاشتن در آرایه
-
-    console.log(categories)
-    categoryForm.reset()        // خالی‌کردن کادرها
+    categories.push(category)
+    renderCategories()          // جدول را دوباره بساز
+    categoryForm.reset()       // خالی‌کردن کادرها
 })
