@@ -47,6 +47,10 @@ function renderCategories() {
     categoryEmpty.hidden = categories.length > 0
 }
 
+function saveCategories() {
+    localStorage.setItem('categories', JSON.stringify(categories))
+}
+
 function showPage(name) {
     pages.forEach(function (page) {
         page.classList.remove('active')
@@ -77,7 +81,8 @@ if (lastPage) {
     showPage(lastPage)
 }
 
-let categories = []
+let categories = JSON.parse(localStorage.getItem('categories')) || []
+renderCategories()
 categoryForm.addEventListener('submit', function (event) {
     event.preventDefault()
 
@@ -99,6 +104,7 @@ categoryForm.addEventListener('submit', function (event) {
     }
 
     categories.push(category)
-    renderCategories()          // جدول را دوباره بساز
-    categoryForm.reset()       // خالی‌کردن کادرها
+    saveCategories()            // ← خط تازه
+    renderCategories()
+    categoryForm.reset()
 })
