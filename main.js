@@ -14,7 +14,9 @@ let cGroup = document.getElementById('c-group')
 let cDensity = document.getElementById('c-density')
 let categoryBody = document.getElementById('category-body')
 let categoryEmpty = document.getElementById('category-empty')
-
+// فرم ظرفیت بیلر
+let generalForm = document.getElementById('general-form')
+let setBilar = document.getElementById('set-bilar')
 
 // ============================================================
 // ۲) داده‌ها
@@ -139,6 +141,20 @@ categoryForm.addEventListener('submit', function (event) {
     categoryForm.reset()            // خالی‌کردن کادرها
 })
 
+// ارسال فرم بیلر: عدد را ذخیره کن
+generalForm.addEventListener('submit', function (event) {
+    event.preventDefault()
+
+    let bilar = Number(setBilar.value)
+
+    // اگر عدد صفر یا منفی است، چیزی ذخیره نکن
+    if (bilar <= 0) {
+        return
+    }
+
+    localStorage.setItem('bilar', bilar)
+    alert('ذخیره شد')
+})
 
 // ============================================================
 // ۵) شروع: کارهایی که هنگام باز شدن صفحه انجام می‌شود
@@ -152,3 +168,8 @@ if (lastPage) {
 
 // جدول دسته‌ها را با داده‌های ذخیره‌شده بساز
 renderCategories()
+// ظرفیت بیلر ذخیره‌شده را در کادر بگذار
+let savedBilar = localStorage.getItem('bilar')
+if (savedBilar) {
+    setBilar.value = savedBilar
+}
