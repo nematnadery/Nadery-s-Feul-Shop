@@ -16,7 +16,15 @@ let categoryBody = document.getElementById('category-body')
 let categoryEmpty = document.getElementById('category-empty')
 // فرم ظرفیت بیلر
 let generalForm = document.getElementById('general-form')
-let setBilar = document.getElementById('set-bilar')
+let setBilar = document.getElementById('set-bilar')// فرم و جدول قیمت‌ها
+let priceForm = document.getElementById('price-form')
+let prCategory = document.getElementById('pr-category')
+let prDate = document.getElementById('pr-date')
+let prPrice = document.getElementById('pr-price')
+let priceBody = document.getElementById('price-body')
+let priceEmpty = document.getElementById('price-empty')
+
+
 
 // ============================================================
 // ۲) داده‌ها
@@ -24,6 +32,8 @@ let setBilar = document.getElementById('set-bilar')
 
 // آرایه دسته‌ها: از localStorage می‌خوانیم، اگر نبود آرایه خالی
 let categories = JSON.parse(localStorage.getItem('categories')) || []
+// آرایه قیمت‌ها: هر قیمت یک شیء است
+let prices = JSON.parse(localStorage.getItem('prices')) || []
 
 
 // ============================================================
@@ -98,6 +108,59 @@ function renderCategories() {
 
     // پیام «خالی»: فقط وقتی دسته‌ای نیست دیده شود
     categoryEmpty.hidden = categories.length > 0
+
+    fillCategorySelect()    // لیست دسته‌ها در فرم قیمت
+    renderPrices()          // اسم دسته‌ها در جدول قیمت
+}
+
+// قیمت‌ها را ذخیره کن
+function savePrices() {
+    localStorage.setItem('prices', JSON.stringify(prices))
+}
+
+// لیست «دسته» در فرم قیمت را از روی آرایه categories پر کن
+function fillCategorySelect() {
+    prCategory.innerHTML = ''
+
+    categories.forEach(function (category) {
+        let option = document.createElement('option')
+        option.value = category.id          // آنچه ذخیره می‌شود
+        option.textContent = category.name  // آنچه کاربر می‌بیند
+        prCategory.appendChild(option)
+    })
+}
+
+// جدول قیمت‌ها را از نو بساز (تازه‌ترین بالا)
+function renderPrices() {
+    priceBody.innerHTML = ''
+
+    // کپی آرایه را مرتب کن: تاریخ بزرگ‌تر (تازه‌تر) اول
+    let sorted = [...prices].sort(function (a, b) {
+        return b.date.localeCompare(a.date)
+    })
+
+    sorted.forEach(function (item) {
+        // اسم دسته را از روی id پیدا کن
+        let category = categories.find(function (c) {
+            return c.id === item.categoryId
+        })
+
+        let tr = document.createElement('tr')
+
+        let tdCategory = document.createElement('td')
+        tdCategory.textContent = category ? category.name : 'دسته حذف‌شده'
+
+        let tdDate = document.createElement('td')
+        tdDate.textContent = item.date
+
+        let tdPrice = document.createElement('td')
+        tdPrice.textContent = item.price
+
+        tr.append(tdCategory, tdDate, tdPrice)
+        priceBody.appendChild(tr)
+    })
+
+    priceEmpty.hidden = prices.length > 0
 }
 
 
@@ -154,6 +217,31 @@ generalForm.addEventListener('submit', function (event) {
 
     localStorage.setItem('bilar', bilar)
     alert('ذخیره شد')
+})
+
+// ارسال فرم قیمت: قیمت تازه بساز و ذخیره کن
+priceForm.addEventListener('submit', function (event) {
+    event.preventDefault()
+
+    let categoryId = Number(prCategory.value)   // value همیشه متن است
+    let date = prDate.value                     // مثل 2026-11-21
+    let priceValue = Number(prPrice.value)
+
+    if (date === '' || priceValue <= 0) {
+        return
+    }
+
+    let price = {
+        id: Date.now(),
+        categoryId: categoryId,
+        date: date,
+        price: priceValue
+    }
+
+    prices.push(price)
+    savePrices()
+    renderPrices()
+    priceForm.reset()
 })
 
 // ============================================================
