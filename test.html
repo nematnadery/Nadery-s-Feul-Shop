@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>آزمون‌ها</title>
+  <style>
+    body { font-family: Tahoma, sans-serif; padding: 24px; }
+    .ok  { color: #0a7a2f; }
+    .bad { color: #b3261e; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>آزمون‌ها</h1>
+  <ul id="results"></ul>
+
+  <script src="logic.js"></script>
+  <script>
+    // مقدار واقعی را با مقدار درست مقایسه می‌کند و یک خط سبز یا قرمز می‌نویسد
+    function check(title, actual, expected) {
+      let li = document.createElement('li')
+      if (actual === expected) {
+        li.className = 'ok'
+        li.textContent = '✔ ' + title
+      } else {
+        li.className = 'bad'
+        li.textContent = '✘ ' + title + ' | درست: ' + expected + ' | تو: ' + actual
+      }
+      document.getElementById('results').appendChild(li)
+    }
+
+    // toLiters(واحد، مقدار، ثقلت، ظرفیت بیلر)
+    check('لیتر همان لیتر است', toLiters('liter', 500, 0.84, 200), 500)
+    check('بیلر ضربدر ظرفیت', toLiters('bilar', 3, 0.84, 200), 600)
+    check('یک تن با ثقلت ۰٫۸', toLiters('ton', 1, 0.8, 200), 1250)
+    check('ده تن با ثقلت ۰٫۸۴ (گرد‌شده)', Math.round(toLiters('ton', 10, 0.84, 200)), 11905)
+    check('واحد نامعتبر صفر می‌دهد', toLiters('gallon', 5, 0.84, 200), 0)
+  </script>
+</body>
+</html>
