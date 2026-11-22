@@ -16,7 +16,8 @@ let categoryBody = document.getElementById('category-body')
 let categoryEmpty = document.getElementById('category-empty')
 // فرم ظرفیت بیلر
 let generalForm = document.getElementById('general-form')
-let setBilar = document.getElementById('set-bilar')// فرم و جدول قیمت‌ها
+let setBilar = document.getElementById('set-bilar')
+// فرم و جدول قیمت‌ها
 let priceForm = document.getElementById('price-form')
 let prCategory = document.getElementById('pr-category')
 let prDate = document.getElementById('pr-date')
@@ -99,8 +100,6 @@ function renderCategories() {
             renderCategories()                  // جدول را دوباره بساز
         })
         tdDelete.appendChild(btn)
-        
-
         // چسباندن ستون‌ها به ردیف و ردیف به جدول
         tr.append(tdName, tdGroup, tdDensity, tdDelete)
         categoryBody.appendChild(tr)

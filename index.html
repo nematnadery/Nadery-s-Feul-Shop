@@ -104,7 +104,90 @@
         <!-- صفحه‌ها: id هر کدام page- + اسم صفحه است. فقط یکی active دارد. -->
         <section class="page active" id="page-dashboard"><p class="app__empty">صفحه «داشبورد» هنوز خالی است.</p></section>
         <section class="page" id="page-sales"><p class="app__empty">صفحه «فروش» هنوز خالی است.</p></section>
-        <section class="page" id="page-purchases"><p class="app__empty">صفحه «خرید» هنوز خالی است.</p></section>
+                <section class="page" id="page-purchases">
+
+          <!-- ثبت خرید -->
+          <div class="card">
+            <h2 class="card__title">ثبت خرید</h2>
+            <p class="card__hint">مقدار را به تن، بیلر یا لیتر وارد کنید. سیستم خودش به لیتر تبدیل می‌کند و قیمت هر لیتر را حساب می‌کند.</p>
+
+            <form class="form-grid form-grid--wide" id="purchase-form" autocomplete="off">
+              <label class="field">
+                <span class="field__label">تاریخ</span>
+                <input class="field__input" type="date" id="p-date" required>
+              </label>
+
+              <label class="field">
+                <span class="field__label">دسته</span>
+                <select class="field__input field__input--text" id="p-category" required></select>
+              </label>
+
+              <label class="field">
+                <span class="field__label">واحد</span>
+                <select class="field__input field__input--text" id="p-unit">
+                  <option value="ton">تن</option>
+                  <option value="bilar">بیلر</option>
+                  <option value="liter">لیتر</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span class="field__label">مقدار</span>
+                <input class="field__input" type="number" id="p-qty" min="0" step="any" required>
+              </label>
+
+              <label class="field">
+                <span class="field__label">قیمت کل (افغانی)</span>
+                <input class="field__input" type="number" id="p-total" min="0" step="any" required>
+              </label>
+
+              <label class="field">
+                <span class="field__label">فروشنده (اختیاری)</span>
+                <input class="field__input field__input--text" type="text" id="p-supplier">
+              </label>
+
+              <!-- پیش‌نمایش زنده: جی‌اس هنگام تایپ این دو عدد را پر می‌کند -->
+              <div class="preview">
+                <div class="preview__item">
+                  <span>معادل لیتر</span>
+                  <strong id="p-prev-liters">—</strong>
+                </div>
+                <div class="preview__item">
+                  <span>قیمت هر لیتر (افغانی)</span>
+                  <strong id="p-prev-cost">—</strong>
+                </div>
+              </div>
+
+              <button class="btn btn--inline" type="submit">ثبت خرید</button>
+            </form>
+          </div>
+
+          <!-- فهرست خریدها -->
+          <div class="card">
+            <h2 class="card__title">خریدهای ثبت‌شده</h2>
+            <p class="card__hint">خرید پاک نمی‌شود. اگر اشتباه بود، آن را باطل کنید و دلیلش را بنویسید.</p>
+
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>تاریخ</th><th>دسته</th><th>مقدار</th><th>لیتر</th>
+                    <th>قیمت کل</th><th>هر لیتر</th><th>فروشنده</th><th></th>
+                  </tr>
+                </thead>
+                <!-- جی‌اس برای هر خرید یک ردیف اینجا می‌سازد. اگر خرید باطل شده بود،
+                     به ردیف کلاس is-void بدهید و به‌جای دکمه «باطل»، برچسب بگذارید:
+                     <tr class="is-void">
+                       ...
+                       <td><span class="tag tag--void">باطل</span></td>
+                     </tr> -->
+                <tbody id="purchase-body"></tbody>
+              </table>
+            </div>
+            <p class="empty" id="purchase-empty">هنوز خریدی ثبت نشده.</p>
+          </div>
+
+        </section>
         <section class="page" id="page-stock"><p class="app__empty">صفحه «موجودی» هنوز خالی است.</p></section>
         <section class="page" id="page-customers"><p class="app__empty">صفحه «مشتریان قرضدار» هنوز خالی است.</p></section>
         <section class="page" id="page-people"><p class="app__empty">صفحه «برادرها و پدر» هنوز خالی است.</p></section>

@@ -545,3 +545,44 @@ select.field__input { cursor: pointer; }
   .form-grid, .form-grid--short { grid-template-columns: 1fr; }
   .btn--inline { width: 100%; }
 }
+
+/* ===== فاز ۴: خرید و موجودی ===== */
+
+/* فرم خرید: سه ستون برابر، دکمه در ردیف آخر */
+.form-grid--wide { grid-template-columns: repeat(3, 1fr); }
+.form-grid--wide .btn--inline { grid-column: 1 / -1; justify-self: start; }
+
+/* پیش‌نمایش زنده (معادل لیتر و قیمت هر لیتر) */
+.preview {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  margin: 8px 0 16px;
+  padding: 14px 18px;
+  background: #f3f7f8;
+  border-inline-start: 4px solid var(--amber);
+  border-radius: 4px;
+}
+.preview__item span {
+  display: block;
+  font-size: .85rem;
+  color: var(--muted);
+}
+.preview__item strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+/* خرید باطل‌شده: کم‌رنگ و خط‌خورده */
+.is-void td { color: var(--muted); text-decoration: line-through; }
+.is-void td:last-child { text-decoration: none; }
+.tag--void { color: var(--danger-ink); background: var(--danger-bg); }
+
+@media (max-width: 820px) {
+  .form-grid--wide { grid-template-columns: 1fr; }
+  .form-grid--wide .btn--inline { justify-self: stretch; }
+  .app__main { width: 100%; }   /* جلوگیری از سرریز افقی در موبایل */
+}
