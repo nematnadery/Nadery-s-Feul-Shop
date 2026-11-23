@@ -24,11 +24,11 @@ function toLiters(unit, qty, density, bilarCapacity) {
 // قیمت هر لیتر را حساب می‌کند
 // totalPrice: قیمت کل خرید (افغانی)
 // liters: معادل لیتر
-function costPerLiter(totalPrice, liters) {
-    // اگر لیتر صفر یا منفی است، تقسیم نکن (جلوگیری از Infinity)
-    if (liters <= 0) {
-        return 0
-    }
+// function costPerLiter(totalPrice, liters) {
+//     // اگر لیتر صفر یا منفی است، تقسیم نکن (جلوگیری از Infinity)
+//     if (liters <= 0) {
+//         return 0
+//     }
 
-    return totalPrice / liters
-}
+//     return totalPrice / liters
+// }
