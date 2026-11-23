@@ -34,6 +34,11 @@
     check('یک تن با ثقلت ۰٫۸', toLiters('ton', 1, 0.8, 200), 1250)
     check('ده تن با ثقلت ۰٫۸۴ (گرد‌شده)', Math.round(toLiters('ton', 10, 0.84, 200)), 11905)
     check('واحد نامعتبر صفر می‌دهد', toLiters('gallon', 5, 0.84, 200), 0)
+        // costPerLiter(قیمت کل، لیتر)
+    check('قیمت هر لیتر', costPerLiter(1100000, 10000), 110)
+    check('با اعشار (گرد به دو رقم)', Math.round(costPerLiter(1000, 3) * 100) / 100, 333.33)
+    check('لیتر صفر: صفر می‌دهد', costPerLiter(5000, 0), 0)
+    check('لیتر منفی: صفر می‌دهد', costPerLiter(5000, -10), 0)
   </script>
 </body>
 </html>
