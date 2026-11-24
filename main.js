@@ -24,7 +24,13 @@ let prDate = document.getElementById('pr-date')
 let prPrice = document.getElementById('pr-price')
 let priceBody = document.getElementById('price-body')
 let priceEmpty = document.getElementById('price-empty')
-
+// فرم خرید (فعلاً فقط کادرهای پیش‌نمایش)
+let pCategory = document.getElementById('p-category')
+let pUnit = document.getElementById('p-unit')
+let pQty = document.getElementById('p-qty')
+let pTotal = document.getElementById('p-total')
+let pPrevLiters = document.getElementById('p-prev-liters')
+let pPrevCost = document.getElementById('p-prev-cost')
 
 
 // ============================================================
@@ -108,8 +114,10 @@ function renderCategories() {
     // پیام «خالی»: فقط وقتی دسته‌ای نیست دیده شود
     categoryEmpty.hidden = categories.length > 0
 
-    fillCategorySelect()    // لیست دسته‌ها در فرم قیمت
-    renderPrices()          // اسم دسته‌ها در جدول قیمت
+    fillCategorySelect(prCategory)   // لیست دسته‌ها در فرم قیمت
+    fillCategorySelect(pCategory)    // لیست دسته‌ها در فرم خرید
+    renderPrices()                   // اسم دسته‌ها در جدول قیمت
+    updatePreview()                  // پیش‌نمایش را با دسته‌های تازه به‌روز کن
 }
 
 // قیمت‌ها را ذخیره کن
@@ -118,14 +126,15 @@ function savePrices() {
 }
 
 // لیست «دسته» در فرم قیمت را از روی آرایه categories پر کن
-function fillCategorySelect() {
-    prCategory.innerHTML = ''
+// لیست «دسته» را در هر select که بدهیم پر کن
+function fillCategorySelect(select) {
+    select.innerHTML = ''
 
     categories.forEach(function (category) {
         let option = document.createElement('option')
         option.value = category.id          // آنچه ذخیره می‌شود
         option.textContent = category.name  // آنچه کاربر می‌بیند
-        prCategory.appendChild(option)
+        select.appendChild(option)
     })
 }
 
@@ -162,6 +171,32 @@ function renderPrices() {
     priceEmpty.hidden = prices.length > 0
 }
 
+// پیش‌نمایش زنده: معادل لیتر و قیمت هر لیتر را حساب و نشان می‌دهد
+function updatePreview() {
+    let unit = pUnit.value
+    let qty = Number(pQty.value)
+    let total = Number(pTotal.value)
+    let bilar = Number(localStorage.getItem('bilar'))   // اگر ذخیره نشده باشد، 0
+
+    // دسته انتخاب‌شده را از روی id پیدا کن
+    let category = categories.find(function (c) {
+        return c.id === Number(pCategory.value)
+    })
+
+    // اگر دسته یا مقدار درست نیست، خط تیره نشان بده
+    if (!category || qty <= 0) {
+        pPrevLiters.textContent = '—'
+        pPrevCost.textContent = '—'
+        return
+    }
+
+    let liters = toLiters(unit, qty, category.density, bilar)
+    let cost = costPerLiter(total, liters)
+
+    // گرد‌کردن فقط برای نمایش است
+    pPrevLiters.textContent = Math.round(liters)
+    pPrevCost.textContent = cost.toFixed(2)
+}
 
 // ============================================================
 // ۴) رویدادها
@@ -203,6 +238,12 @@ categoryForm.addEventListener('submit', function (event) {
     categoryForm.reset()            // خالی‌کردن کادرها
 })
 
+// هر تغییر در این چهار کادر، پیش‌نمایش را به‌روز می‌کند
+let previewInputs = [pCategory, pUnit, pQty, pTotal]
+
+previewInputs.forEach(function (el) {
+    el.addEventListener('input', updatePreview)
+})
 // ارسال فرم بیلر: عدد را ذخیره کن
 generalForm.addEventListener('submit', function (event) {
     event.preventDefault()
