@@ -31,6 +31,9 @@ let pQty = document.getElementById('p-qty')
 let pTotal = document.getElementById('p-total')
 let pPrevLiters = document.getElementById('p-prev-liters')
 let pPrevCost = document.getElementById('p-prev-cost')
+let purchaseForm = document.getElementById('purchase-form')
+let pDate = document.getElementById('p-date')
+let pSupplier = document.getElementById('p-supplier')
 
 
 // ============================================================
@@ -41,6 +44,8 @@ let pPrevCost = document.getElementById('p-prev-cost')
 let categories = JSON.parse(localStorage.getItem('categories')) || []
 // آرایه قیمت‌ها: هر قیمت یک شیء است
 let prices = JSON.parse(localStorage.getItem('prices')) || []
+// آرایه خریدها: هر خرید یک شیء است
+let purchases = JSON.parse(localStorage.getItem('purchases')) || []
 
 
 // ============================================================
@@ -98,6 +103,23 @@ function renderCategories() {
         btn.className = 'btn-link-danger'
         btn.type = 'button'
         btn.textContent = 'حذف'
+                btn.addEventListener('click', function () {
+            // دسته‌ای که خرید دارد حذف نمی‌شود
+            let hasPurchase = purchases.some(function (p) {
+                return p.categoryId === category.id
+            })
+
+            if (hasPurchase) {
+                alert('این دسته خرید دارد و حذف نمی‌شود')
+                return
+            }
+
+            categories = categories.filter(function (c) {
+                return c.id !== category.id     // همه را نگه دار، جز این یکی
+            })
+            saveCategories()
+            renderCategories()
+        })
         btn.addEventListener('click', function () {
             categories = categories.filter(function (c) {
                 return c.id !== category.id     // همه را نگه دار، جز این یکی
@@ -123,6 +145,11 @@ function renderCategories() {
 // قیمت‌ها را ذخیره کن
 function savePrices() {
     localStorage.setItem('prices', JSON.stringify(prices))
+}
+
+// خریدها را ذخیره کن
+function savePurchases() {
+    localStorage.setItem('purchases', JSON.stringify(purchases))
 }
 
 // لیست «دسته» در فرم قیمت را از روی آرایه categories پر کن
@@ -244,6 +271,57 @@ let previewInputs = [pCategory, pUnit, pQty, pTotal]
 previewInputs.forEach(function (el) {
     el.addEventListener('input', updatePreview)
 })
+
+// ارسال فرم خرید: خرید تازه بساز و ذخیره کن
+purchaseForm.addEventListener('submit', function (event) {
+    event.preventDefault()
+
+    // مقدارهای فرم
+    let date = pDate.value
+    let categoryId = Number(pCategory.value)
+    let unit = pUnit.value
+    let qty = Number(pQty.value)
+    let total = Number(pTotal.value)
+    let supplier = pSupplier.value.trim()
+
+    // دسته را پیدا کن (برای ثقلت)
+    let category = categories.find(function (c) {
+        return c.id === categoryId
+    })
+
+    // اگر چیزی ناقص یا نامعتبر است، ثبت نکن
+    if (date === '' || !category || qty <= 0 || total <= 0) {
+        return
+    }
+
+    // لیتر را همین حالا حساب کن (بعداً با عوض‌شدن ثقلت یا بیلر تغییر نکند)
+    let bilar = Number(localStorage.getItem('bilar'))
+    let liters = toLiters(unit, qty, category.density, bilar)
+
+    if (liters <= 0) {
+        alert('معادل لیتر صفر شد. اگر بیلر انتخاب کرده‌اید، ظرفیت بیلر را در تنظیمات ذخیره کنید.')
+        return
+    }
+
+    // ساختن شیء خرید
+    let purchase = {
+        id: Date.now(),
+        date: date,
+        categoryId: categoryId,
+        unit: unit,             // آنچه کاربر وارد کرد
+        qty: qty,
+        liters: liters,         // حساب‌شده در همین لحظه
+        total: total,
+        supplier: supplier,
+        voided: false           // برای باطل‌کردن در ۴-۵
+    }
+
+    purchases.push(purchase)
+    savePurchases()
+    purchaseForm.reset()
+    updatePreview()             // reset رویداد input نمی‌دهد، پس پیش‌نمایش را دستی تازه کن
+})
+
 // ارسال فرم بیلر: عدد را ذخیره کن
 generalForm.addEventListener('submit', function (event) {
     event.preventDefault()
