@@ -34,7 +34,9 @@ let pPrevCost = document.getElementById('p-prev-cost')
 let purchaseForm = document.getElementById('purchase-form')
 let pDate = document.getElementById('p-date')
 let pSupplier = document.getElementById('p-supplier')
-
+// جدول خریدها
+let purchaseBody = document.getElementById('purchase-body')
+let purchaseEmpty = document.getElementById('purchase-empty')
 
 // ============================================================
 // ۲) داده‌ها
@@ -46,6 +48,8 @@ let categories = JSON.parse(localStorage.getItem('categories')) || []
 let prices = JSON.parse(localStorage.getItem('prices')) || []
 // آرایه خریدها: هر خرید یک شیء است
 let purchases = JSON.parse(localStorage.getItem('purchases')) || []
+// اسم واحدها به فارسی (برای نمایش در جدول)
+let unitNames = { ton: 'تن', bilar: 'بیلر', liter: 'لیتر' }
 
 
 // ============================================================
@@ -152,6 +156,87 @@ function savePurchases() {
     localStorage.setItem('purchases', JSON.stringify(purchases))
 }
 
+// جدول خریدها را از روی آرایه purchases از نو بساز
+function renderPurchases() {
+    purchaseBody.innerHTML = ''
+
+    // تازه‌ترین بالا: اول تاریخ، اگر برابر بود شناسه
+    let sorted = [...purchases].sort(function (a, b) {
+        return b.date.localeCompare(a.date) || b.id - a.id
+    })
+
+    sorted.forEach(function (purchase) {
+        // اسم دسته را از روی id پیدا کن
+        let category = categories.find(function (c) {
+            return c.id === purchase.categoryId
+        })
+
+        let tr = document.createElement('tr')
+
+        // خرید باطل‌شده: کم‌رنگ و خط‌خورده، با دلیل در راهنمای موس
+        if (purchase.voided) {
+            tr.className = 'is-void'
+            tr.title = 'دلیل: ' + purchase.voidReason
+        }
+
+        let tdDate = document.createElement('td')
+        tdDate.textContent = purchase.date
+
+        let tdCategory = document.createElement('td')
+        tdCategory.textContent = category ? category.name : '—'
+
+        let tdQty = document.createElement('td')
+        tdQty.textContent = purchase.qty + ' ' + unitNames[purchase.unit]
+
+        let tdLiters = document.createElement('td')
+        tdLiters.textContent = Math.round(purchase.liters)
+
+        let tdTotal = document.createElement('td')
+        tdTotal.textContent = purchase.total
+
+        let tdCost = document.createElement('td')
+        tdCost.textContent = costPerLiter(purchase.total, purchase.liters).toFixed(2)
+
+        let tdSupplier = document.createElement('td')
+        tdSupplier.textContent = purchase.supplier || '—'
+
+        // ستون آخر: برچسب «باطل» یا دکمه «باطل»
+        let tdAction = document.createElement('td')
+
+        if (purchase.voided) {
+            let tag = document.createElement('span')
+            tag.className = 'tag tag--void'
+            tag.textContent = 'باطل'
+            tdAction.appendChild(tag)
+        } else {
+            let btn = document.createElement('button')
+            btn.className = 'btn-link-danger'
+            btn.type = 'button'
+            btn.textContent = 'باطل'
+
+            btn.addEventListener('click', function () {
+                let reason = prompt('دلیل باطل‌کردن را بنویسید:')
+
+                // انصراف یا دلیل خالی: باطل نکن
+                if (reason === null || reason.trim() === '') {
+                    return
+                }
+
+                purchase.voided = true
+                purchase.voidReason = reason.trim()
+                savePurchases()
+                renderPurchases()
+            })
+
+            tdAction.appendChild(btn)
+        }
+
+        tr.append(tdDate, tdCategory, tdQty, tdLiters, tdTotal, tdCost, tdSupplier, tdAction)
+        purchaseBody.appendChild(tr)
+    })
+
+    purchaseEmpty.hidden = purchases.length > 0
+}
 // لیست «دسته» در فرم قیمت را از روی آرایه categories پر کن
 // لیست «دسته» را در هر select که بدهیم پر کن
 function fillCategorySelect(select) {
@@ -318,6 +403,7 @@ purchaseForm.addEventListener('submit', function (event) {
 
     purchases.push(purchase)
     savePurchases()
+    renderPurchases()
     purchaseForm.reset()
     updatePreview()             // reset رویداد input نمی‌دهد، پس پیش‌نمایش را دستی تازه کن
 })
@@ -379,3 +465,4 @@ let savedBilar = localStorage.getItem('bilar')
 if (savedBilar) {
     setBilar.value = savedBilar
 }
+renderPurchases()
