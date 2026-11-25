@@ -104,7 +104,7 @@
         <!-- صفحه‌ها: id هر کدام page- + اسم صفحه است. فقط یکی active دارد. -->
         <section class="page active" id="page-dashboard"><p class="app__empty">صفحه «داشبورد» هنوز خالی است.</p></section>
         <section class="page" id="page-sales"><p class="app__empty">صفحه «فروش» هنوز خالی است.</p></section>
-                <section class="page" id="page-purchases">
+        <section class="page" id="page-purchases">
 
           <!-- ثبت خرید -->
           <div class="card">
@@ -188,7 +188,11 @@
           </div>
 
         </section>
-        <section class="page" id="page-stock"><p class="app__empty">صفحه «موجودی» هنوز خالی است.</p></section>
+                <section class="page" id="page-stock">
+          <!-- جی‌اس برای هر دسته یک کارت در stock-cards می‌سازد -->
+          <div class="stock-grid" id="stock-cards"></div>
+          <p class="empty" id="stock-cards-empty">هنوز دسته‌ای اضافه نشده.</p>
+        </section>
         <section class="page" id="page-customers"><p class="app__empty">صفحه «مشتریان قرضدار» هنوز خالی است.</p></section>
         <section class="page" id="page-people"><p class="app__empty">صفحه «برادرها و پدر» هنوز خالی است.</p></section>
         <section class="page" id="page-cash"><p class="app__empty">صفحه «پول و تحویل به پدر» هنوز خالی است.</p></section>

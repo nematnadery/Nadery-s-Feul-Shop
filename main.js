@@ -37,6 +37,9 @@ let pSupplier = document.getElementById('p-supplier')
 // جدول خریدها
 let purchaseBody = document.getElementById('purchase-body')
 let purchaseEmpty = document.getElementById('purchase-empty')
+// کارت‌های موجودی
+let stockCards = document.getElementById('stock-cards')
+let stockCardsEmpty = document.getElementById('stock-cards-empty')
 
 // ============================================================
 // ۲) داده‌ها
@@ -144,7 +147,10 @@ function renderCategories() {
     fillCategorySelect(pCategory)    // لیست دسته‌ها در فرم خرید
     renderPrices()                   // اسم دسته‌ها در جدول قیمت
     updatePreview()                  // پیش‌نمایش را با دسته‌های تازه به‌روز کن
+    updatePreview()                  // پیش‌نمایش را با دسته‌های تازه به‌روز کن
+    renderStock()                    // ← خط تازه: دسته تازه یا حذف‌شده در کارت‌ها دیده شود
 }
+
 
 // قیمت‌ها را ذخیره کن
 function savePrices() {
@@ -236,7 +242,38 @@ function renderPurchases() {
     })
 
     purchaseEmpty.hidden = purchases.length > 0
+    renderStock() 
 }
+
+// کارت موجودی هر دسته را از نو بساز
+function renderStock() {
+    stockCards.innerHTML = ''
+
+    categories.forEach(function (category) {
+        let liters = stockOf(category.id, purchases)
+
+        let card = document.createElement('div')
+        card.className = 'stock-card stock-card--' + category.group
+
+        let name = document.createElement('h3')
+        name.className = 'stock-card__name'
+        name.textContent = category.name
+
+        let big = document.createElement('div')
+        big.className = 'stock-card__big'
+        big.textContent = Math.round(liters).toLocaleString('en-US')   // مثل 11,905
+
+        let unit = document.createElement('div')
+        unit.className = 'stock-card__unit'
+        unit.textContent = 'لیتر'
+
+        card.append(name, big, unit)
+        stockCards.appendChild(card)
+    })
+
+    stockCardsEmpty.hidden = categories.length > 0
+}
+
 // لیست «دسته» در فرم قیمت را از روی آرایه categories پر کن
 // لیست «دسته» را در هر select که بدهیم پر کن
 function fillCategorySelect(select) {

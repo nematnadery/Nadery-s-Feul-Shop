@@ -32,3 +32,20 @@ function costPerLiter(totalPrice, liters) {
 
     return totalPrice / liters
 }
+
+// موجودی یک دسته (به لیتر): جمع لیتر خریدهای باطل‌نشده
+// categoryId: شناسه دسته
+// purchases: آرایه همه خریدها
+function stockOf(categoryId, purchases) {
+    // فقط خریدهای همین دسته که باطل نشده‌اند
+    let valid = purchases.filter(function (p) {
+        return p.categoryId === categoryId && !p.voided
+    })
+
+    // جمع لیترها
+    let total = valid.reduce(function (sum, p) {
+        return sum + p.liters
+    }, 0)
+
+    return total
+}

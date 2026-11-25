@@ -28,6 +28,18 @@
       document.getElementById('results').appendChild(li)
     }
 
+        // stockOf(شناسه دسته، آرایه خریدها)
+    let sample = [
+      { categoryId: 1, liters: 1000, voided: false },
+      { categoryId: 1, liters: 500, voided: false },
+      { categoryId: 1, liters: 9999, voided: true },
+      { categoryId: 2, liters: 300, voided: false }
+    ]
+    check('جمع خریدهای یک دسته', stockOf(1, sample), 1500)
+    check('خرید باطل‌شده حساب نمی‌شود', stockOf(2, sample), 300)
+    check('دسته بدون خرید', stockOf(3, sample), 0)
+    check('آرایه خالی', stockOf(1, []), 0)
+
     // toLiters(واحد، مقدار، ثقلت، ظرفیت بیلر)
     check('لیتر همان لیتر است', toLiters('liter', 500, 0.84, 200), 500)
     check('بیلر ضربدر ظرفیت', toLiters('bilar', 3, 0.84, 200), 600)

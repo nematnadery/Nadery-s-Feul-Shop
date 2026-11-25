@@ -586,3 +586,32 @@ select.field__input { cursor: pointer; }
   .form-grid--wide .btn--inline { justify-self: stretch; }
   .app__main { width: 100%; }   /* جلوگیری از سرریز افقی در موبایل */
 }
+/* ===== موجودی: کارت هر دسته ===== */
+.stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+}
+.stock-card {
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #cdd8dc;
+  border-inline-start: 6px solid var(--line);
+  border-radius: 6px;
+}
+.stock-card--diesel { border-inline-start-color: #2b88a8; }
+.stock-card--petrol { border-inline-start-color: var(--amber); }
+.stock-card__name {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.stock-card__big {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1.2;
+}
+.stock-card__unit {
+  font-size: .85rem;
+  color: var(--muted);
+}
