@@ -502,4 +502,4 @@ let savedBilar = localStorage.getItem('bilar')
 if (savedBilar) {
     setBilar.value = savedBilar
 }
-renderPurchases()
+// renderPurchases()
